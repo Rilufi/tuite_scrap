@@ -1,36 +1,27 @@
-import snscrape.modules.twitter as sntwitter
-import pandas as pd
-from datetime import datetime
-import ssl
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 import time
 
-# Desabilitar verificação de certificado SSL
-ssl._create_default_https_context = ssl._create_unverified_context
+# Configurações do Selenium
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Rodar em segundo plano (sem abrir a interface gráfica)
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox")
 
+driver = webdriver.Chrome(options=chrome_options)
 
-# Definir a query de busca
-query = "(vacina HPV OR vacina de HPV) since:2023-01-01 until:2023-12-31"
+# URL de busca no Twitter/X
+url = 'https://twitter.com/search?q=vacina%20HPV%20OR%20vacina%20de%20HPV&src=typed_query&f=live'
 
-# Limitar o número de tweets a serem coletados
-max_tweets = 100
+# Acessar a página
+driver.get(url)
+time.sleep(5)  # Espera a página carregar
 
-# Lista para armazenar os dados
-tweets_list = []
+# Extrair tweets
+tweets = driver.find_elements_by_css_selector("article")
 
+for tweet in tweets:
+    print(tweet.text)
 
-# Scraping
-for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
-    if i >= max_tweets:
-        break
-    tweets_list.append([tweet.date, tweet.user.username, tweet.content])
-    time.sleep(1)  # Aguardar 1 segundo entre as requisições
-
-
-# Criar um DataFrame a partir da lista de tweets
-tweets_df = pd.DataFrame(tweets_list, columns=['Date', 'Username', 'Tweet'])
-
-# Salvar o resultado em um arquivo CSV
-current_time = datetime.now().strftime("%Y%m%d%H%M%S")
-tweets_df.to_csv(f'tweets_hp_vacina_{current_time}.csv', index=False)
-
-print(f"Scraping concluído. {len(tweets_df)} tweets coletados.")
+driver.quit()
