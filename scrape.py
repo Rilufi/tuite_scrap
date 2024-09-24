@@ -1,15 +1,33 @@
+import os
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.os_manager import ChromeType
 from selenium.webdriver.chrome.options import Options
-import time
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, UnexpectedAlertPresentException, NoAlertPresentException
+from time import sleep
+from selenium.webdriver.common.keys import Keys
 
-# Configurações do Selenium
+chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+
 chrome_options = Options()
-chrome_options.add_argument("--headless")  # Rodar em segundo plano (sem abrir a interface gráfica)
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--no-sandbox")
+options = [
+    "--headless",
+    "--disable-gpu",
+    "--window-size=1920,1200",
+    "--ignore-certificate-errors",
+    "--disable-extensions",
+    "--no-sandbox",
+    "--disable-dev-shm-usage"
+]
+for option in options:
+    chrome_options.add_argument(option)
 
-driver = webdriver.Chrome(options=chrome_options)
+driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+wait = WebDriverWait(self.driver, 15)
 
 # URL de busca no Twitter/X
 url = 'https://twitter.com/search?q=vacina%20HPV%20OR%20vacina%20de%20HPV&src=typed_query&f=live'
