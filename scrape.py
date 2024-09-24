@@ -37,7 +37,7 @@ driver.get(url)
 time.sleep(5)  # Espera a página carregar
 
 # Extrair tweets
-tweets = driver.find_elements_by_css_selector("article")
+tweets = driver.find_element(By.CSS_SELECTOR, "article")
 
 for tweet in tweets:
     print(tweet.text)
