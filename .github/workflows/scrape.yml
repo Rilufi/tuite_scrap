@@ -1,32 +1,33 @@
-name: Scraper
+name: TwitterScraping
 
 on: push
-#  schedule:
- #   - cron: '0 * * * *' 
+ # schedule:
+    # Rodar o scraping a cada 6 horas
+#    - cron: "0 */6 * * *"
 
 jobs:
-  test:
+  scrape:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Check out the repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install selenium webdriver-manager
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium webdriver-manager
 
-    - name: Install Google Chrome
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
+      - name: Install Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
-    - name: Rodar script pra votar
-      run: |
-        python scrape.py
+      - name: Run scraping script
+        run: |
+          python scrape_twitter.py
