@@ -1,6 +1,12 @@
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
 from datetime import datetime
+import ssl
+import time
+
+# Desabilitar verificação de certificado SSL
+ssl._create_default_https_context = ssl._create_unverified_context
+
 
 # Definir a query de busca
 query = "(vacina HPV OR vacina de HPV) since:2023-01-01 until:2023-12-31"
@@ -11,11 +17,14 @@ max_tweets = 100
 # Lista para armazenar os dados
 tweets_list = []
 
+
 # Scraping
 for i, tweet in enumerate(sntwitter.TwitterSearchScraper(query).get_items()):
     if i >= max_tweets:
         break
     tweets_list.append([tweet.date, tweet.user.username, tweet.content])
+    time.sleep(1)  # Aguardar 1 segundo entre as requisições
+
 
 # Criar um DataFrame a partir da lista de tweets
 tweets_df = pd.DataFrame(tweets_list, columns=['Date', 'Username', 'Tweet'])
