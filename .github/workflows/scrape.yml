@@ -3,7 +3,7 @@ name: TwitterScraping
 on: push
  # schedule:
     # Rodar o scraping a cada 6 horas
-#    - cron: "0 */6 * * *"
+ #   - cron: "0 */6 * * *"
 
 jobs:
   scrape:
@@ -31,3 +31,9 @@ jobs:
       - name: Run scraping script
         run: |
           python scrape_twitter.py
+
+      - name: Upload page source artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: page-source
+          path: page_source.html
