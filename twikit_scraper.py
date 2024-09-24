@@ -1,4 +1,3 @@
-import asyncio
 from twikit import Client
 
 
@@ -9,16 +8,16 @@ PASSWORD = os.getenv("TWITTER_PASSWORD")
 # Initialize client
 client = Client('en-US')
 
-async def main():
-    await client.login(
+def main():
+   client.login(
         auth_info_1=USERNAME ,
         auth_info_2=EMAIL,
         password=PASSWORD
     )
 
-asyncio.run(main())
+main()
 
-tweets = await client.search_tweet('vacina', 'hpv')
+tweets = client.search_tweet('vacina', 'hpv')
 
 for tweet in tweets:
     print(
