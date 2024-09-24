@@ -7,6 +7,7 @@ EMAIL = os.getenv("TWITTER_EMAIL")
 PASSWORD = os.getenv("TWITTER_PASSWORD")
 
 async def main():
+    client = Client('en-US')
     await client.login(
         username=USERNAME,
         password=PASSWORD
@@ -14,5 +15,5 @@ async def main():
 
 asyncio.run(main())
 # Initialize client
-client = Client('en-US')
+
 
