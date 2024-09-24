@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 
-# Definir a URL da postagem de interesse ou busca no Twitter
+# Definir a URL da busca no Twitter
 query_url = 'https://twitter.com/search?q=vacina%20HPV%20OR%20vacina%20de%20HPV&src=typed_query&f=live'
 
 # Configuração do WebDriver para Chrome
@@ -23,36 +23,29 @@ service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
 wait = WebDriverWait(driver, 10)
 
-# Função de login (caso seja necessário)
-def login():
-    driver.get('https://x.com/i/flow/login')
-    email_input = wait.until(EC.presence_of_element_located((By.NAME, "text")))
-    email_input.send_keys(os.getenv("TWITTER_EMAIL"))
-    
-    next_btn = driver.find_element(By.CSS_SELECTOR, 'button span span')
-    next_btn.click()
-    sleep(3)
-
-    password_input = wait.until(EC.presence_of_element_located((By.NAME, "password")))
-    password_input.send_keys(os.getenv("TWITTER_PASSWORD"))
-
-    login_btn = driver.find_element(By.CSS_SELECTOR, 'button span span')
-    login_btn.click()
-    sleep(5)
-
 # Função para buscar e coletar os comentários
 def scrape_tweets():
     driver.get(query_url)
-    sleep(3)
+    sleep(5)
     
     tweets = []
     
-    for _ in range(5):  # Loop para rolar a página e carregar mais tweets
-        elements = driver.find_elements(By.XPATH, '//div[@data-testid="tweetText"]')
-        for el in elements:
-            tweets.append(el.text)
+    # Forçar scroll progressivo até carregar todos os tweets
+    last_height = driver.execute_script("return document.body.scrollHeight")
+    
+    while True:
+        elements = driver.find_elements(By.XPATH, '//div[@data-testid="tweet"]//span')
+        if elements:
+            for el in elements:
+                tweets.append(el.text)
+        
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        sleep(2)  # Aguardar enquanto a página carrega
+        sleep(5)
+        
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
     
     return tweets
 
