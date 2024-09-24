@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
+import os
 
 # Configuração do WebDriver
 chrome_options = Options()
