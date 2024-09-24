@@ -27,7 +27,7 @@ for option in options:
     chrome_options.add_argument(option)
 
 driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
-wait = WebDriverWait(self.driver, 15)
+wait = WebDriverWait(driver, 15)
 
 # URL de busca no Twitter/X
 url = 'https://twitter.com/search?q=vacina%20HPV%20OR%20vacina%20de%20HPV&src=typed_query&f=live'
