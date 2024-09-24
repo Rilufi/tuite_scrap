@@ -1,9 +1,8 @@
 name: TwitterScraping
 
 on: push
- # schedule:
-    # Rodar o scraping a cada 6 horas
- #   - cron: "0 */6 * * *"
+  # schedule:
+  #   - cron: "0 */6 * * *"
 
 jobs:
   scrape:
@@ -29,12 +28,11 @@ jobs:
           sudo apt-get install -y google-chrome-stable
 
       - name: Run scraping script
+        env:  # As variáveis de ambiente devem ser passadas aqui, fora do bloco "run"
+          TWITTER_EMAIL: ${{ secrets.TWITTER_EMAIL }}
+          TWITTER_PASSWORD: ${{ secrets.TWITTER_PASSWORD }}
         run: |
           python scrape_twitter.py
-          env:
-           TWITTER_EMAIL: ${{ secrets.TWITTER_EMAIL }}
-           TWITTER_PASSWORD: ${{ secrets.TWITTER_PASSWORD }}
-
 
       - name: Upload page source artifact
         uses: actions/upload-artifact@v3
