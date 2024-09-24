@@ -10,6 +10,7 @@ async def main():
     client = Client('en-US')
     await client.login(
         auth_info_1=USERNAME,
+        auth_info_2=EMAIL,
         password=PASSWORD
     )
 
