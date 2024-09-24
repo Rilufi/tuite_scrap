@@ -1,5 +1,5 @@
 from twikit import Client
-
+import os
 
 USERNAME = os.getenv("TWITTER_USERNAME")
 EMAIL = os.getenv("TWITTER_EMAIL")
