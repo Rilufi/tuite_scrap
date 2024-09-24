@@ -9,7 +9,7 @@ PASSWORD = os.getenv("TWITTER_PASSWORD")
 async def main():
     client = Client('en-US')
     await client.login(
-        username=USERNAME,
+        auth_info_1e=USERNAME,
         password=PASSWORD
     )
 
