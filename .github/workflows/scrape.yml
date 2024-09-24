@@ -32,7 +32,7 @@ jobs:
         run: |
           python scrape_twitter.py
           env:
-           TWITTER_USERNAME: ${{ secrets.TWITTER_USERNAME }}
+           TWITTER_EMAIL: ${{ secrets.TWITTER_EMAIL }}
            TWITTER_PASSWORD: ${{ secrets.TWITTER_PASSWORD }}
 
 
