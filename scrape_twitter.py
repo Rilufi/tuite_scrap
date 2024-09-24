@@ -38,7 +38,7 @@ def login(username, password):
     sleep(5)  # Esperar o redirecionamento após o login
 
 # Insira aqui suas credenciais
-username = os.getenv("TWITTER_USERNAME")
+username = os.getenv("TWITTER_EMAIL")
 password = os.getenv("TWITTER_PASSWORD")
 
 # Chamar a função de login
