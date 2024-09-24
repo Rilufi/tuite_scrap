@@ -23,10 +23,15 @@ service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
 wait = WebDriverWait(driver, 10)
 
-# Função para buscar e coletar os comentários
+# Função para buscar e coletar os tweets
 def scrape_tweets():
+    print("Acessando a URL...")
     driver.get(query_url)
     sleep(5)
+
+    # Salvar o código-fonte da página para inspeção
+    with open("page_source.html", "w") as f:
+        f.write(driver.page_source)
     
     tweets = []
     
@@ -34,7 +39,9 @@ def scrape_tweets():
     last_height = driver.execute_script("return document.body.scrollHeight")
     
     while True:
-        elements = driver.find_elements(By.XPATH, '//div[@data-testid="tweet"]//span')
+        elements = driver.find_elements(By.XPATH, '//article[@role="article"]//div[@lang]')
+        print(f"Encontrados {len(elements)} elementos na iteração.")
+        
         if elements:
             for el in elements:
                 tweets.append(el.text)
