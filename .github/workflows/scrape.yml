@@ -1,0 +1,32 @@
+name: Scrape Tweets
+
+on: push
+  #schedule:
+    # Rodar o scraping a cada 6 horas
+  #  - cron: "0 */6 * * *"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install snscrape pandas
+
+      - name: Run scraping script
+        run: python scrape.py
+
+      - name: Upload result as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tweets-results
+          path: tweets_hp_vacina_*.csv
