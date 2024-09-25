@@ -24,11 +24,9 @@ def get_tweets(tweets):
 
 
 #* login credentials
-config = ConfigParser()
-config.read('config.ini')
-username = config['X']['username']
-email = config['X']['email']
-password = config['X']['password']
+username = os.getenv("TWITTER_USERNAME")
+email = os.getenv("TWITTER_EMAIL")
+password = os.getenv("TWITTER_PASSWORD")
 
 #* create a csv file
 with open('tweets.csv', 'w', newline='') as file:
