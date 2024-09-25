@@ -1,5 +1,7 @@
 from twikit import Client, TooManyRequests
 from configparser import ConfigParser
+import os
+
 
 #* login credentials
 username = os.getenv("TWITTER_USERNAME")
