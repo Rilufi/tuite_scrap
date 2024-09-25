@@ -1,1 +1,2 @@
 twikit==1.7.6
+snscrape
