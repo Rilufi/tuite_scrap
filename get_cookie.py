@@ -4,7 +4,7 @@ from datetime import datetime
 import csv
 from configparser import ConfigParser
 from random import randint
-
+import os
 
 MINIMUM_TWEETS = 10
 QUERY = 'vacina hpv lang:pt until:2024-25-09 since:2024-25-09'
