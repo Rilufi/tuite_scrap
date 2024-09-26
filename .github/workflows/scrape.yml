@@ -27,7 +27,7 @@ jobs:
           python scrape_twitter.py
 
       - name: Upload Tweets CSV
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: scraped-tweets
           path: tweets_vacina_hpv_*.csv
