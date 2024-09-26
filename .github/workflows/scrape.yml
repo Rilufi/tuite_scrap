@@ -18,6 +18,10 @@ jobs:
         with:
           python-version: '3.11'  # Use a versão 3.11 do Python
 
+      - name: Update system certificates (optional)
+        run: |
+          sudo apt update && sudo apt upgrade
+
       - name: Install dependencies
         run: |
           pip install snscrape pandas
@@ -25,6 +29,9 @@ jobs:
       - name: Run scraping script
         run: |
           python scrape_twitter.py
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
 
       - name: Upload Tweets CSV
         uses: actions/upload-artifact@v3
