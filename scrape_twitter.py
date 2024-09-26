@@ -1,32 +1,47 @@
-import snscrape.modules.twitter as sntwitter
-import pandas as pd
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-import requests
-from datetime import datetime
+import datetime
+import os
+# import twint
+import pathlib
 
-# Desativar warnings de SSL
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-# Defina a query para busca
-query = 'vacina HPV'
+DATE_START = str(datetime.datetime.today().date() - datetime.timedelta(days=1))
+DATA_PATH = pathlib.Path("data/")
+DATA_PATH.mkdir(parents=True, exist_ok=True)
+# MAX_RESULT = 100
+# DATE_END = '2020-05-08'
+HASHTAG = 'depression'
+JSON_FILENAME = DATA_PATH / str(datetime.datetime.today().date())
 
-# Defina o número máximo de tweets que deseja capturar
-max_tweets = 100
+def sns_scrape():
+    os.system(f'snscrape --jsonl --progress --since {DATE_START} twitter-hashtag "{HASHTAG}" > {JSON_FILENAME}.json')
 
-# Lista para armazenar os resultados
-tweets_list = []
+    # with end date
+    # os.system(f'snscrape --jsonl --progress --since {DATE_START} twitter-hashtag "{HASHTAG} until:{DATE_END}" > {JSON_FILENAME}.json')
 
-# Scraping de tweets
-for i, tweet in enumerate(sntwitter.TwitterSearchScraper(f'{query}').get_items()):
-    if i >= max_tweets:
-        break
-    tweets_list.append([tweet.date, tweet.id, tweet.content, tweet.user.username, tweet.url])
+def scrape_twint():
+    c = twint.Config()
+    # c.Until = str(datetime.datetime.today().date() + datetime.timedelta(days=1))
+    c.Since = str(datetime.datetime.today().replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(days=1))
+    # c.Username = "test"
+    c.Search = "#depression"
+    c.Location=True
+    c.Images = True
+    # c.Limit = 50
+    # c.Custom["user"] = ["id", "tweet", "user_id", "username", "hashtags", "mentions"]
+    c.User_full = True
+    c.Store_csv = True
+    c.Output = "test3.csv"
+    c.Debug = True
+    twint.run.Search(c)
 
-# Crie um DataFrame com os resultados
-tweets_df = pd.DataFrame(tweets_list, columns=['Date', 'Tweet Id', 'Content', 'Username', 'URL'])
 
-# Salve o DataFrame em um arquivo CSV
-csv_filename = f"tweets_vacina_hpv_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
-tweets_df.to_csv(csv_filename, index=False)
 
-print(f"Scraping concluído. Tweets salvos em {csv_filename}")
+if __name__ == "__main__":
+    # scrape_twint()
+    sns_scrape()
+
+
+# reference
+# https://betterprogramming.pub/how-to-scrape-tweets-with-snscrape-90124ed006af
+# https://github.com/hansheng0512/tweets-scrapping-using-python
+# https://github.community/t/can-github-actions-directly-edit-files-in-a-repository/17884/7
