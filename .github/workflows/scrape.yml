@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.11'  # Use a versão 3.11 do Python
 
       - name: Install dependencies
         run: |
@@ -27,7 +27,7 @@ jobs:
           python scrape_twitter.py
 
       - name: Upload Tweets CSV
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: scraped-tweets
           path: tweets_vacina_hpv_*.csv
