@@ -1,53 +1,27 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from time import sleep
-import os
+import snscrape.modules.twitter as sntwitter
+import pandas as pd
+from datetime import datetime
 
-# Configuração do WebDriver
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
+# Defina a query para busca
+query = 'vacina HPV'
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-wait = WebDriverWait(driver, 10)
+# Defina o número máximo de tweets que deseja capturar
+max_tweets = 100
 
-# Função para fazer login
-def login(username, password):
-    driver.get("https://twitter.com/login")
-    sleep(3)
+# Lista para armazenar os resultados
+tweets_list = []
 
-    # Localizar o campo de login
-    email_input = wait.until(EC.presence_of_element_located((By.NAME, "text")))
-    email_input.send_keys(username)
-    email_input.send_keys(Keys.RETURN)
-    
-    # Esperar e inserir a senha
-    sleep(2)
-    password_input = wait.until(EC.presence_of_element_located((By.NAME, "password")))
-    password_input.send_keys(password)
-    password_input.send_keys(Keys.RETURN)
-    
-    sleep(5)  # Esperar o redirecionamento após o login
+# Scraping de tweets
+for i, tweet in enumerate(sntwitter.TwitterSearchScraper(f'{query}').get_items()):
+    if i >= max_tweets:
+        break
+    tweets_list.append([tweet.date, tweet.id, tweet.content, tweet.user.username, tweet.url])
 
-# Insira aqui suas credenciais
-username = os.getenv("TWITTER_EMAIL")
-password = os.getenv("TWITTER_PASSWORD")
+# Crie um DataFrame com os resultados
+tweets_df = pd.DataFrame(tweets_list, columns=['Date', 'Tweet Id', 'Content', 'Username', 'URL'])
 
-# Chamar a função de login
-login(username, password)
+# Salve o DataFrame em um arquivo CSV
+csv_filename = f"tweets_vacina_hpv_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+tweets_df.to_csv(csv_filename, index=False)
 
-# Verificar se o login foi bem-sucedido
-if "login" not in driver.current_url:
-    print("Login realizado com sucesso!")
-else:
-    print("Erro no login.")
-
-driver.quit()
+print(f"Scraping concluído. Tweets salvos em {csv_filename}")
