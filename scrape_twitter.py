@@ -1,6 +1,11 @@
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import requests
 from datetime import datetime
+
+# Desativar warnings de SSL
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # Defina a query para busca
 query = 'vacina HPV'
