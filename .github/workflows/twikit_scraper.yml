@@ -1,4 +1,4 @@
-name: TwitterScraping
+name: Twikiter
 
 on: push
   # schedule:
